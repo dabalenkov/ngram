@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            name="N-Gram Text-Topic Analysis"
+            icon="icons/sample.gif"
+            category="org.jcryptool.analysis"
+            class="org.jcryptool.analysis.ngram.views.NgramView"
+            id="org.jcryptool.analysis.ngram.views.NgramView">
+      </view>
+   </extension>
+   <extension
+         point="org.jcryptool.core.operations.analysis">
+      <analysis
+            name="N-Gram Text-Topic Analysis"
+            viewId="org.jcryptool.analysis.ngram.views.NgramView">
+      </analysis>
+   </extension>
+
+</plugin>
