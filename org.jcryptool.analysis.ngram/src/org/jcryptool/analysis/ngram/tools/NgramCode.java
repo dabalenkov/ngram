@@ -20,34 +20,6 @@ public class NgramCode
 
         ngramArr = new String[30][51];
 
-        // SAMPLE TEXT
-        ngramArr[0][1] = "ER";  ngramArr[1][1] = "DER";     
-        ngramArr[0][2] = "EN";  ngramArr[1][2] = "UNG";
-        ngramArr[0][3] = "DE";  ngramArr[1][3] = "DIE";
-        ngramArr[0][4] = "UN";  ngramArr[1][4] = "GEN";
-        ngramArr[0][5] = "GE";  ngramArr[1][5] = "ICH";
-        ngramArr[0][6] = "CH";  ngramArr[1][6] = "EIN";
-        ngramArr[0][7] = "EI";  ngramArr[1][7] = "NDE";
-        ngramArr[0][8] = "TE";  ngramArr[1][8] = "DEN";
-        ngramArr[0][9] = "IE";  ngramArr[1][9] = "STE";
-        ngramArr[0][10] = "ST"; ngramArr[1][10] = "UND";
-        ngramArr[0][11] = "ND"; ngramArr[1][11] = "SCH";
-        ngramArr[0][12] = "IN"; ngramArr[1][12] = "NGE";
-        ngramArr[0][13] = "NG"; ngramArr[1][13] = "VER";
-        ngramArr[0][14] = "ES"; ngramArr[1][14] = "DES";
-        ngramArr[0][15] = "BE"; ngramArr[1][15] = "TEN";
-        ngramArr[0][16] = "NE"; ngramArr[1][16] = "IST";
-        ngramArr[0][17] = "RA"; ngramArr[1][17] = "RUN";
-        ngramArr[0][18] = "DI"; ngramArr[1][18] = "RAG";
-        ngramArr[0][19] = "AN"; ngramArr[1][19] = "CHT";
-        ngramArr[0][20] = "RE"; ngramArr[1][20] = "EUE";
-        ngramArr[0][21] = "IC"; ngramArr[1][21] = "CHE";
-        ngramArr[0][22] = "ME"; ngramArr[1][22] = "UER";
-        ngramArr[0][23] = "AU"; ngramArr[1][23] = "TER";
-        ngramArr[0][24] = "LI"; ngramArr[1][24] = "TEU";
-        ngramArr[0][25] = "IS"; ngramArr[1][25] = "ERD";
-        ngramArr[0][26] = "NT"; ngramArr[1][26] = "ACH";
-
         // LITERATURE TEXT DEUTSCH                          ENGLISH
         ngramArr[2][1] = "EN";  ngramArr[3][1] = "ICH";     ngramArr[12][1] = "TH";     ngramArr[13][1] = "THE";
         ngramArr[2][2] = "ER";  ngramArr[3][2] = "EIN";     ngramArr[12][2] = "HE";     ngramArr[13][2] = "AND";

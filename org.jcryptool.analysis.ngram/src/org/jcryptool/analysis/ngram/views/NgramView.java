@@ -242,7 +242,7 @@ public class NgramView extends ViewPart
 		txt_Reference = new Text(grp_LoadReferenceText, SWT.BORDER);
 		txt_Reference.setEditable(false);
 		txt_Reference.setLayoutData(new GridData(SWT.FILL, SWT.LEFT, false, false, 1, 1));
-		txt_Reference.setBounds(307, 15, 145, 23);
+		txt_Reference.setBounds(235, 25, 145, 23);
 				
 		grp_AnalizeText = new Group(cp_Container, SWT.NONE);
 		gd_grp_AnalizeText = new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1);
