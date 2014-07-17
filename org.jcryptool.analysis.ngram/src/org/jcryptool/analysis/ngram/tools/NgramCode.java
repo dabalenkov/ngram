@@ -308,7 +308,8 @@ public class NgramCode
         ngramArr[10][49] = "LE"; ngramArr[11][49] = "AUS";  ngramArr[20][49] = "LA";    ngramArr[21][49] = "SIN";
         ngramArr[10][50] = "TI"; ngramArr[11][50] = "INE";  ngramArr[20][50] = "LI";    ngramArr[21][50] = "STA";
 
-/**
+// IF THERE IS A MANUAL REFERENCE
+ 
         if (!view.getReferenceTitle().equals(""))
         {
             String referenceText = view.getReferenceText().replaceAll("\\s+", "").toUpperCase();
@@ -340,17 +341,21 @@ public class NgramCode
                     if (++count < e26)
                         ngramArr[20 + n][count] = p;
             }
-        }   
-**/
+        }
+        
+// IF THERE IS A MANUAL REFERENCE 
+        
 
+        //Remove spaces and convert to Upper Case
         String cypherText = view.getCypherText().replaceAll("\\s+", "").toUpperCase();
-
-        for (int n = 2; n <= 3; n++)
+        System.out.println("Without spaces & Uppercase: "+cypherText);
+        
+        for (int n = 2; n <= 3; n++) // *** For 2 and 3 Gramms ***
         {
             String[] gramArr = new String[cypherText.length()];
 
             for (int m = 0; m < cypherText.length(); m++)
-                if (m < cypherText.length() - (n - 1))
+                if (m < cypherText.length() - (n - 1)) //avoid going beyond the end of the string
                     gramArr[m] = cypherText.substring(m, n + m);
 
             Map<String, Integer> freq = new HashMap<String, Integer>();
@@ -361,45 +366,64 @@ public class NgramCode
                     freq.put(word, 0);
                 freq.put(word, freq.get(word) + 1);
             }
-
+            
+            //SORT the N-grams according to their frequencies
             List<String> resultSorted = new ArrayList<String>();
             resultSorted = getWordInDescendingFreqOrder(freq);
-
-            int e26 = 51; 
+            
+            //Save only the first 51 to the ngramArray
+            int e51 = 51;
             int count = 0;
 
+    		System.out.println("------");
+    		System.out.println("Sorted "+ n+"-grams:");
+            
             for (String p: resultSorted)
-                if (++count < e26)
+                if (++count < e51)
+                {
                     ngramArr[n - 2][count] = p;
+                    System.out.println(count+ ". "+ ngramArr[n-2][count]);
+                }    
         }
 
-        int[] distance2gram = new int[8];
+        //An array of 2- and 3-gram distances between given txt and 5 other txts
+        int[] distance2gram = new int[8];        
         int[] distance3gram = new int[8];
 
+        /** 2-GRAM DISTANCES BETWEEN GIVEN TXT AND 5 OTHER TXTS*/
         distance2gram[0] = 0;
-        int w = 0;
-
+        int w = 0; //flag
+        
+        
+        int language = 10; // default language is English
+        if (view.getCypherLanguage() == 1)
+        	language = 0; //else set to German
+        
         for (int dis2 = 1; dis2 < 6; dis2++)
         {
-            for (int i = 1; i < 51; i++)
+            for (int i = 1; i < 51; i++) //compare each with each
             {
-                for (int j = 1; j < 51; j++)
+                for (int j = 1; j < 51; j++) //compare each with each
                 {
-                    if (ngramArr[0][i].equals(ngramArr[2 * dis2 + view.getCypherLanguage() * 10][j]))
+                	// if ENGLISH: language=10, if GERMAN: language=0
+                    if (ngramArr[0][i].equals(ngramArr[2 * dis2 + language][j])) //compare 2,4,6,8,10
                     {
-                        distance2gram[dis2] += Math.abs(i - j);
+                        distance2gram[dis2] += Math.abs(i - j); //calc Euclidean dist. |i-j|             
                         w = 1;
                     } 
                 }
 
-                if (w == 0)
-                    distance2gram[dis2] += 50 - i + 5; 
+                if (w == 0) //if for two i and j there were NO 2 equals (e.g.ER = ER)
+                    distance2gram[dis2] += 50 - i + 5;                 
+                
                 else
-                    w = 0;
+                    w = 0;                
             }
         }
 
-/**
+    
+// IF THERE IS MANUAL REFERANCE, 2-GRAMMS ***
+ 
         if (!view.getReferenceTitle().equals(""))
         {
             for (int i = 1; i < 51; i++)
@@ -419,7 +443,7 @@ public class NgramCode
                     w = 0;
             }
         }
-**/
+//*** IF THERE IS MANUAL REFERANCE, 2-GRAMMS  **/
 
         System.out.println("2-gram distance to Literature: " + distance2gram[1]);
         System.out.println("2-gram distance to Games: " + distance2gram[2]);
@@ -431,8 +455,10 @@ public class NgramCode
             System.out.println("2-gram distance to "+ view.getReferenceTitle() + ": " + distance2gram[6]);
         System.out.println("-------");
 
+        
+        /** 3-GRAM DISTANCES BETWEEN GIVEN TXT AND 5 OTHER TXTS*/
         distance3gram[0] = 0;
-        w = 0;
+        w = 0; //flag
 
         for (int dis3 = 1; dis3 < 6; dis3++)
         { 
@@ -440,28 +466,28 @@ public class NgramCode
             {
                 for (int j = 1; j < 51; j++)
                 {
-                    if (ngramArr[1][i].equals(ngramArr[2 * dis3 + 1 + view.getCypherLanguage() * 10][j]))
+                    if (ngramArr[1][i].equals(ngramArr[2 * dis3 + 1 + language][j])) //compare 3,5,7,9,11
                     {
                         distance3gram[dis3] += Math.abs(i - j);
                         w = 1;
                     }
                 }
 
-                if (w == 0)
+                if (w == 0) //if for two i and j there were NO 2 equals (e.g.ER = ER)
                     distance3gram[dis3] += 50 - i + 5;
                 else
                     w = 0;
             }
         }  
 
-/**
+// IF THERE IS MANUAL REFERANCE, 3-GRAMMS ***
         if (!view.getReferenceTitle().equals(""))
         {
             for (int i = 1; i < 51; i++)
             {
                 for (int j = 1; j < 51; j++)
                 {
-                    if (ngramArr[1][k].equals(ngramArr[23][j]))
+                    if (ngramArr[1][i].equals(ngramArr[23][j]))
                     {
                         distance3gram[6] += Math.abs(i - j);
                         w = 1;
@@ -474,7 +500,7 @@ public class NgramCode
                     w = 0;
             }
         }
-**/
+//*** IF THERE IS MANUAL REFERANCE, 3-GRAMMS **/
 
         System.out.println("3-gram distance to Literature: " + distance3gram[1]);
         System.out.println("3-gram distance to Games: " + distance3gram[2]);
@@ -485,15 +511,18 @@ public class NgramCode
         if (!view.getReferenceTitle().equals(""))
             System.out.println("2-gram distance to " + view.getReferenceTitle() + ": " + distance3gram[6]);
         System.out.println("-------");
-
+        
+        
+        /** COMBINED DISTANCES BETWEEN GIVEN TXT AND 5 OTHER TXTS*/
         int[] distance;
         distance = new int[7];
 
+        //ADD 2-gram and 3-gram distances
         for (int m = 1; m < 6; m++)
             distance[m] = distance2gram[m] + distance3gram[m];
        
         if (!view.getReferenceTitle().equals(""))
-            distance[6]= distance2gram[6]+distance3gram[6];
+            distance[6]= distance2gram[6]+distance3gram[6]; //if there is manual reference
 
         System.out.println("Combined distance to Literature: " + distance[1]);
         System.out.println("Combined distance to Games: " + distance[2]);
@@ -504,47 +533,149 @@ public class NgramCode
         if (!view.getReferenceTitle().equals(""))
             System.out.println("Combined distance to " + view.getReferenceTitle() + ": " + distance[6]);
         System.out.println("-------");
+                
 
+        /**SORT DISTANCES IN DESCENDING ORDER AND MAKE A GUESS*/
         int totalNr = !view.getReferenceTitle().equals("")? 7: 6;
         int[] newDistance = new int[totalNr];
+        
+        //TESTING
+        String[] namesStr = new String[totalNr];
+        namesStr[1] = "Literature";
+        namesStr[2] = "Games";
+        namesStr[3] = "Politics";
+        namesStr[4] = "Football";
+        namesStr[5] = "Law";
+        if (!view.getReferenceTitle().equals(""))
+        	namesStr[6] = view.getReferenceTitle();
+        
+        MyLinkedMap<String, Integer> nameDist = new MyLinkedMap<String, Integer>();
 
+        for (int v=1; v<totalNr; v++){
+            	nameDist.put(namesStr[v], distance[v]);
+            //	System.out.println("!Combined distance to "+namesStr[v]+ ": " + distance[v]);
+        }        
+
+        List<String> sortedNameDist = new ArrayList<String>();
+        sortedNameDist = getWordInDescendingFreqOrder(nameDist);
+      
+        MyLinkedMap<String, Integer> nameDistSorted = new MyLinkedMap<String, Integer>();        
+        
+        for (String word : sortedNameDist){        	
+        	nameDistSorted.put(word, nameDist.get(word));
+        	System.out.println(word + ": " + (int) nameDist.get(word));
+        }
+        
+        String star1 = "\u2605 \u2606 \u2606 \u2606 \u2606";
+        String star2 = "\u2605 \u2606 \u2606 \u2606 \u2606";
+        
+        if (nameDistSorted.getValue(totalNr-2) < 1050)
+        	star1 = "\u2605 \u2605 \u2605 \u2605 \u2605";
+        else if (nameDistSorted.getValue(totalNr-2) < 1150)
+        	star1 = "\u2605 \u2605 \u2605 \u2605 \u2606";
+        else if (nameDistSorted.getValue(totalNr-2) < 1250)
+        	star1 = "\u2605 \u2605 \u2605 \u2606 \u2606";
+        else if (nameDistSorted.getValue(totalNr-2) < 1350)
+        	star1 = "\u2605 \u2605 \u2606 \u2606 \u2606";
+        
+        if (nameDistSorted.getValue(totalNr-3) < 1050)
+        	star2 = "\u2605 \u2605 \u2605 \u2605 \u2605";
+        else if (nameDistSorted.getValue(totalNr-3) < 1150)
+        	star2 = "\u2605 \u2605 \u2605 \u2605 \u2606";
+        else if (nameDistSorted.getValue(totalNr-3) < 1250)
+        	star2 = "\u2605 \u2605 \u2605 \u2606 \u2606";
+        else if (nameDistSorted.getValue(totalNr-3) < 1350)
+        	star2 = "\u2605 \u2605 \u2606 \u2606 \u2606";
+        
+        //TESTING
+        
+        
+
+        //COPY
         for (int f = 1; f < totalNr; f++)
             newDistance[f] = distance[f];
-
+        //SORT
         Arrays.sort(newDistance);
 
+        //MAKE A GUESS
+        System.out.println("-------");
+        
+        //1. GUESS
         if (newDistance[1] == distance[1])
-            result1 = "1 Hypothesis: This text is a Literature text."; 
+            result1 = "1 Guess: This text deals with the topic Literature."; 
         else if (newDistance[1] == distance[2])
-            result1 = "1 Hypothesis: This text is a Game rules text.";
+            result1 = "1 Guess: This text deals with the topic Game rules.";
         else if (newDistance[1] == distance[3])
-            result1 = "1 Hypothesis: This text is a Politics text.";
+            result1 = "1 Guess: This text deals with the topic Politics.";
         else if (newDistance[1] == distance[4])
-            result1 = "1 Hypothesis: This text is a Football text.";
+            result1 = "1 Guess: This text deals with the topic Football.";
         else if (newDistance[1] == distance[5])
-            result1 = "1 Hypothesis: This text is a Law text.";
+            result1 = "1 Guess: This text deals with the topic Law.";
         else if (!view.getReferenceTitle().equals(""))
             if (newDistance[1] == distance[6])
-                result1 = "1 Hypothesis: This text is a " + view.getReferenceTitle() + " text.";
-
+                result1 = "1 Guess: This text deals with the topic " + view.getReferenceTitle() + ".";
+        
+        //2. GUESS
+        
+        //Make sure that the two guesses are NOT the same, thus compare in reversed order
         if (newDistance[2] == distance[5])
-            result2 = "2 Hypothesis: This text is a Law text.";
+            result2 = "2 Guess: This text deals with the topic Law.";
         else if (newDistance[2] == distance[4])
-            result2 = "2 Hypothesis: This text is a Football text.";
+            result2 = "2 Guess: This text deals with the topic Football.";
         else if (newDistance[2] == distance[3])
-            result2 = "2 Hypothesis: This text is a Politics text.";
+            result2 = "2 Guess: This text deals with the topic Politics.";
         else if (newDistance[2] == distance[2])
-            result2 = "2 Hypothesis: This text is a Game rules text.";
+            result2 = "2 Guess: This text deals with the topic Game rules.";
         else if (newDistance[2] == distance[1]) 
-           result2 = "2 Hypothesis: This text is a Literature text.";
+           result2 = "2 Guess: This text deals with the topic Literature.";
         else if (!view.getReferenceTitle().equals(""))
             if (newDistance[2] == distance[6])
-                result2 = "2 Hypothesis: This text is a " + view.getReferenceTitle() + " text.";
-       
-        System.out.println(result1 + "\n" + result2);
-        view.setResultText(result1 + "\n" + result2);
+                result2 = "2 Guess: This text deals with the topic " + view.getReferenceTitle() + ".";        
+        
+        //System.out.println(result1+"\t(" +star1+")"+ "\n" + result2+"\t(" +star2+")");
+        System.out.println("("+star1+") \t"+result1+"\n"+"("+star2+") \t"+ result2);
+        view.setResultText("("+star1+") \t"+result1+"\n"+"("+star2+") \t"+ result2);
+        //view.setResultText(result1+"\t(" +star1+")"+ "\n" + result2+"\t(" +star2+")");
     }
+ 
+    //Functionality to access single elements of a Map
+    class MyLinkedMap<K, V> extends LinkedHashMap<K, V>
+    {
 
+        public V getValue(int i)
+        {
+
+           Map.Entry<K, V>entry = this.getEntry(i);
+           if(entry == null) return null;
+
+           return entry.getValue();
+        }
+        
+        public K getKey(int i)
+        {
+
+           Map.Entry<K, V>entry = this.getEntry(i);
+           if(entry == null) return null;
+
+           return entry.getKey();
+        }
+
+        public Map.Entry<K, V> getEntry(int i)
+        {
+            // check if negative index provided
+            Set<Map.Entry<K,V>>entries = entrySet();
+            int j = 0;
+
+            for(Map.Entry<K, V>entry : entries)
+                if(j++ == i)return entry;
+
+            return null;
+
+        }
+
+    }
+    
+    //Function that returns words in descending frequency order
     private List<String> getWordInDescendingFreqOrder(Map<String, Integer> wordCount)
     {
         List<Map.Entry<String, Integer>> list = 

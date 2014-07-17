@@ -177,7 +177,7 @@ public class NgramView extends ViewPart
         });
 
 		cb_ChooseDist = new Combo(grp_LoadText, SWT.READ_ONLY);		
-		cb_ChooseDist.setItems(new String[] {"Positioning", "Euclidean", "Least Squares"});
+		cb_ChooseDist.setItems(new String[] {"Euclidean", "Least Squares"});
 		cb_ChooseDist.setBounds(460, 25, 145, 23);
 		cb_ChooseDist.select(0);
 		cb_ChooseDist.addModifyListener(new ModifyListener()
