@@ -1,7 +1,8 @@
 package org.jcryptool.analysis.ngram.views;
 
 import java.io.*;
-
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.layout.*;
@@ -10,6 +11,7 @@ import org.eclipse.swt.custom.*;
 import org.eclipse.ui.part.*;
 import org.eclipse.wb.swt.*;
 import org.jcryptool.analysis.ngram.tools.*;
+import org.osgi.framework.Bundle;
 
 public class NgramView extends ViewPart
 {
@@ -69,14 +71,14 @@ public class NgramView extends ViewPart
 		gd_grp_LoadText.widthHint = 462;
 		gd_grp_LoadText.heightHint = 45;
 		grp_LoadText.setLayoutData(gd_grp_LoadText);
-		grp_LoadText.setText("Three input parameters: the input method, the language of the text you want to analyze, and the analysis method.");
+		grp_LoadText.setText("Three input parameters: the input method, the language of the text you want to analyze, and the analysis method");
 
 		cb_LoadText = new Combo(grp_LoadText, SWT.READ_ONLY);
 		cb_LoadText.setItems(new String[] {"From manual input", "From file", "English samle text", "German sample text"});
 		cb_LoadText.setBounds(10, 25, 145, 23);
 		cb_LoadText.select(0);
 		cb_LoadText.addModifyListener(new ModifyListener()
-		{
+		{			
 			public void modifyText(ModifyEvent e)
 			{
 				if (cb_LoadText.getSelectionIndex() == 0)
@@ -112,70 +114,55 @@ public class NgramView extends ViewPart
 				}
 
 				if (cb_LoadText.getSelectionIndex() == 2)
-				{					
-//					  FileInputStream fin;  
-//
-//					  try
-//					  {
-//						  String current = new java.io.File( "." ).getCanonicalPath();
-//					      System.out.println("Current dir:"+current);
-//						  
-//					      fin = new FileInputStream ("/Users/dimitri/Documents/ngram/ngram/org.jcryptool.analysis.ngram/asset/Sample_text_EN.txt");
-//					      txt_CypherText.setText(new BufferedReader(new InputStreamReader(fin)).readLine());
-//					      fin.close();  
-//					  }
-//					  catch (IOException ex)
-//					  {
-//						  ex.printStackTrace();
-//					  }															
+				{			
+					Bundle bundle = Platform.getBundle("org.jcryptool.analysis.ngram");
+					java.net.URL fileURL = bundle.getEntry("asset/Sample_text_EN.txt");
 					
-					txt_CypherText.setText(
-					    "The text below is a part of Jack London's \"White Phang\". To see, if the analysis will recognize it as a Literature, click the \"Analyze text\" button.\n" +
-					    "--\n" +
-					    "In the fall of the year, when the days were shortening and the bite of the frost was coming into the air, White Fang got his chance for\n" +
-					    "liberty. For several days there had been a great hubbub in the village. The summer camp was being dismantled, and the tribe, bag and baggage, was preparing\n" +
-						"to go off to the fall hunting. White Fang watched it all with eager eyes, and when the tepees began to come down and the canoes were loading at the bank,\n" +
-						"he understood. Already the canoes were departing, and some had disappeared down the river. Quite deliberately he determined to stay behind. He waited his\n" +
-						"opportunity to slink out of camp to the woods. Here, in the running stream where ice was beginning to form, he hid his trail. Then he crawled into the\n" +
-						"heart of a dense thicket and waited. The time passed by, and he slept intermittently for hours. Then he was aroused by Grey Beaver's voice calling him\n" +
-						"by name. There were other voices. White Fang could hear Grey Beaver's squaw taking part in the search, and Mit-sah, who was Grey Beaver's son.\n" +
-						"White Fang trembled with fear, and though the impulse came to crawl out of his hiding-place, he resisted it. After a time the voices died away, and\n" +
-						"some time after that he crept out to enjoy the success of his undertaking. Darkness was coming on, and for a while he played about among the trees,\n" +
-						"pleasuring in his freedom. Then, and quite suddenly, he became aware of loneliness. He sat down to consider, listening to the silence of the forest\n" +
-						"and perturbed by it. That nothing moved nor sounded, seemed ominous. He felt the lurking of danger, unseen and unguessed. He was suspicious of the\n" +
-						"looming bulks of the trees and of the dark shadows that might conceal all manner of perilous things. Then it was cold. Here was no warm side of a\n" +
-						"tepee against which to snuggle. The frost was in his feet, and he kept lifting first one fore-foot and then the other. He curved his bushy tail\n" +
-						"around to cover them, and at the same time he saw a vision. There was nothing strange about it. Upon his inward sight was impressed a succession\n" +
-						"of memory-pictures. He saw the camp again, the tepees, and the blaze of the fires. He heard the shrill voices of the women, the gruff basses of\n" +
-						"the men, and the snarling of the dogs. He was hungry, and he remembered pieces of meat and fish that had been thrown him. Here was no meat,\n" +
-						"nothing but a threatening and inedible silence.");
-
+					File file = null;
+					FileInputStream fin = null;
+					byte[] content = null; 	
+					
+					try 
+					{
+					    file = new File(FileLocator.resolve(fileURL).toURI());
+					    fin = new FileInputStream(file);
+						content = new byte[fin.available()];
+						fin.read(content);
+						fin.close();
+					} 
+					catch (Exception ex) 
+					{					    					
+					}							
+					
+					txt_CypherText.setText(new String(content));					
 					txt_CypherText.setEditable(true);
 					cb_ChooseLang.select(0);
 				}
 
 				if (cb_LoadText.getSelectionIndex() == 3)
 				{
-					txt_CypherText.setText(
-					    "Der Text unten ist ein Auszug aus \"Drei Kameraden\" von Erich Maria Remarque. Um zu sehen, ob die Analyse es richtig als Literatur erkennt, clicke auf \"Analyze text\" Knopf.\n" + 
-						"--\n" +
-					    "Ich zog einen Briefbogen aus dem Fach und fing an zu rechnen. Die Kinderzeit, die Schule – das war ein Komplex,\n" +           
-						"fern, irgendwo, schon nicht mehr wahr. Das richtige Leben begann erst 1916. Da war ich gerade Rekrut geworden, dünn,\n" +
-						"hochgeschossen, achtzehn Jahre alt, und übte nach dem Kommando eines schnauzbärtigen Unteroffiziers auf den\n" +
-						"Sturzäckern hinter der Kaserne Hinlegen und Aufstehen. An einem der ersten Abende kam meine Mutter in die\n" +
-						"Kaserne, um mich zu besuchen; aber sie mußte über eine Stunde auf mich warten. Ich hatte meinen Tornister nicht\n" +
-						"vorschriftsmäßig gepackt gehabt und mußte deshalb in der freien Zeit zur Strafe die Latrinen scheuern. Sie wollte mir\n" +
-						"helfen, aber das durfte sie nicht. Sie weinte, und ich war so müde, daß ich einschlief, als sie noch bei mir saß.\n" +
-						"1917. Flandern. Middendorf und ich hatten in der Kantine eine Flasche Rotwein gekauft. Damit wollten wir feiern.\n" +
-						"Aber wir kamen nicht dazu. Frühmorgens fing das schwere Feuer der Engländer an. Köster wurde mittags verwundet.\n" +
-						"Meyer und Deters fielen nachmittags. Und abends, als wir schon glaubten, Ruhe zu haben, und die Flasche\n" +
-						"aufmachten, kam Gas und quoll in die Unterstände. Wir hatten zwar rechtzeitig die Masken auf, aber die von\n" +
-						"Middendorf war kaputt. Als er es merkte, war es zu spät. Bis sie abgerissen und eine neue gefunden war, hatte er schon\n" +
-						"zuviel Gas geschluckt und brach bereits Blut. Er starb am nächsten Morgen, grün und schwarz im Gesicht. Sein Hals\n" +
-						"war ganz zerrissen – so hatte er mit den Nägeln versucht, ihn aufzukratzen, um Luft zu kriegen.");
-
+					Bundle bundle = Platform.getBundle("org.jcryptool.analysis.ngram");
+					java.net.URL fileURL = bundle.getEntry("asset/Sample_text_DE.txt");
+					
+					File file = null;
+					FileInputStream fin = null;
+					byte[] content = null; 	
+					
+					try 
+					{
+					    file = new File(FileLocator.resolve(fileURL).toURI());
+					    fin = new FileInputStream(file);
+						content = new byte[fin.available()];
+						fin.read(content);
+						fin.close();
+					} 
+					catch (Exception ex) 
+					{					    					
+					}							
+					
+					txt_CypherText.setText(new String(content));					
 					txt_CypherText.setEditable(true);
-                    cb_ChooseLang.select(1);
+					cb_ChooseLang.select(1);                    
 				}
 
 				txt_ResultText.setText("");
@@ -216,6 +203,14 @@ public class NgramView extends ViewPart
 		fl_grp_CypherText.marginHeight = 8;
 		grp_CypherText.setLayout(fl_grp_CypherText);
 		txt_CypherText = new Text(grp_CypherText, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.MULTI);
+		txt_CypherText.addModifyListener(new ModifyListener()
+		{
+			public void modifyText(ModifyEvent e)
+			{
+				txt_ResultText.setText("");
+			}
+		});		
+		
 		txt_CypherText.setEditable(true);
 		txt_CypherText.setFocus();
 		
@@ -300,11 +295,23 @@ public class NgramView extends ViewPart
 		{
 			public void mouseDown(MouseEvent e)
 			{
-				if ((txt_Reference.getText().length() > 0) && !txt_Reference.getEnabled())
+				if (referenceText.isEmpty() && (txt_CypherText.getText().length() > 511) && !txt_Reference.getEnabled())
 				{
 					NgramCalculate();
 				}
-				else
+				
+				else if (txt_CypherText.getText().length() < 512)
+				{
+					Display display = Display.getDefault();
+					Shell dialogShell = new Shell(display, SWT.APPLICATION_MODAL);
+					
+					MessageBox messageBox = new MessageBox(dialogShell, SWT.ICON_WARNING | SWT.OK);
+					messageBox.setText("Error");
+					messageBox.setMessage("Make sure that the text is at least 512 symbols long.");
+					messageBox.open();
+				}
+				
+				else if (!referenceText.isEmpty())
 				{
 					Display display = Display.getDefault();
 					Shell dialogShell = new Shell(display, SWT.APPLICATION_MODAL);
@@ -313,7 +320,7 @@ public class NgramView extends ViewPart
 					messageBox.setText("Error");
 					messageBox.setMessage("Submit reference name.");
 					messageBox.open();
-				}
+				}				
 			}
 		});
 		btn_AnalizeText.setBounds(10, 22, 145, 23);
@@ -323,7 +330,7 @@ public class NgramView extends ViewPart
 		gd_grp_ResultText = new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1);
 		gd_grp_ResultText.heightHint = 70;
 		grp_ResultText.setLayoutData(gd_grp_ResultText);
-		grp_ResultText.setText("Result: To which topic does the given text probably belong to?");
+		grp_ResultText.setText("Result: To which topic does the given text probably belong to (out of the 5 given topics plus one optional own reference)?");
 		fl_grp_ResultText = new FillLayout(SWT.HORIZONTAL);
 		fl_grp_ResultText.marginWidth = 8;
 		fl_grp_ResultText.marginHeight = 8;
