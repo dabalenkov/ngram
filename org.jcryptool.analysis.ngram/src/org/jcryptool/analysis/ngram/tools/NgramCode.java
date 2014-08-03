@@ -72,7 +72,7 @@ public class NgramCode
         ngramArr[2][49] = "ED"; ngramArr[3][49] = "AUS";    ngramArr[12][49] = "TA";    ngramArr[13][49] = "ESS";
         ngramArr[2][50] = "WA"; ngramArr[3][50] = "RDE";    ngramArr[12][50] = "LI";    ngramArr[13][50] = "EAT";
 
-        // GAMES RULES TEXT DEUTSCH                         ENGLISH
+        // GAME RULES TEXT DEUTSCH                         ENGLISH
         ngramArr[4][1] = "ER";  ngramArr[5][1] = "IEL";     ngramArr[14][1] = "TH";     ngramArr[15][1] = "THE";        
         ngramArr[4][2] = "EN";  ngramArr[5][2] = "PIE";     ngramArr[14][2] = "HE";     ngramArr[15][2] = "PLA";
         ngramArr[4][3] = "IE";  ngramArr[5][3] = "SPI";     ngramArr[14][3] = "ER";     ngramArr[15][3] = "LAY";
@@ -418,7 +418,7 @@ public class NgramCode
 //*** IF THERE IS MANUAL REFERANCE, 2-GRAMMS  **/
 
         System.out.println("2-gram distance to Literature: " + distance2gram[1]);
-        System.out.println("2-gram distance to Games: " + distance2gram[2]);
+        System.out.println("2-gram distance to Game rules: " + distance2gram[2]);
         System.out.println("2-gram distance to Politics: " + distance2gram[3]);
         System.out.println("2-gram distance to Football: " + distance2gram[4]);
         System.out.println("2-gram distance to Law: " + distance2gram[5]);
@@ -475,7 +475,7 @@ public class NgramCode
 //*** IF THERE IS MANUAL REFERANCE, 3-GRAMMS **/
 
         System.out.println("3-gram distance to Literature: " + distance3gram[1]);
-        System.out.println("3-gram distance to Games: " + distance3gram[2]);
+        System.out.println("3-gram distance to Game rules: " + distance3gram[2]);
         System.out.println("3-gram distance to Politics: " + distance3gram[3]);
         System.out.println("3-gram distance to Football: " + distance3gram[4]);
         System.out.println("3-gram distance to Law: " + distance3gram[5]);
@@ -497,7 +497,7 @@ public class NgramCode
             distance[6]= distance2gram[6]+distance3gram[6]; //if there is manual reference
 
         System.out.println("Combined distance to Literature: " + distance[1]);
-        System.out.println("Combined distance to Games: " + distance[2]);
+        System.out.println("Combined distance to Game rules: " + distance[2]);
         System.out.println("Combined distance to Politics: " + distance[3]);
         System.out.println("Combined distance to Football: " + distance[4]);
         System.out.println("Combined distance to Law: " + distance[5]);
@@ -514,7 +514,7 @@ public class NgramCode
         //TESTING
         String[] namesStr = new String[totalNr];
         namesStr[1] = "Literature";
-        namesStr[2] = "Games";
+        namesStr[2] = "Game rules";
         namesStr[3] = "Politics";
         namesStr[4] = "Football";
         namesStr[5] = "Law";

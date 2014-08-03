@@ -1,6 +1,7 @@
 package org.jcryptool.analysis.ngram.views;
 
 import java.io.*;
+
 import org.eclipse.swt.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.layout.*;
@@ -36,6 +37,7 @@ public class NgramView extends ViewPart
     private GridData gd_grp_ResultText;
     private FillLayout fl_grp_ResultText;
     private Text txt_Reference;
+    private Button btn_ReferenceSubmit;
     private Text txt_ResultText;
     private String referenceText;
 
@@ -110,7 +112,23 @@ public class NgramView extends ViewPart
 				}
 
 				if (cb_LoadText.getSelectionIndex() == 2)
-				{
+				{					
+//					  FileInputStream fin;  
+//
+//					  try
+//					  {
+//						  String current = new java.io.File( "." ).getCanonicalPath();
+//					      System.out.println("Current dir:"+current);
+//						  
+//					      fin = new FileInputStream ("/Users/dimitri/Documents/ngram/ngram/org.jcryptool.analysis.ngram/asset/Sample_text_EN.txt");
+//					      txt_CypherText.setText(new BufferedReader(new InputStreamReader(fin)).readLine());
+//					      fin.close();  
+//					  }
+//					  catch (IOException ex)
+//					  {
+//						  ex.printStackTrace();
+//					  }															
+					
 					txt_CypherText.setText(
 					    "The text below is a part of Jack London's \"White Phang\". To see, if the analysis will recognize it as a Literature, click the \"Analyze text\" button.\n" +
 					    "--\n" +
@@ -226,12 +244,12 @@ public class NgramView extends ViewPart
 					fis.read(content);
 					fis.close();
 					referenceText = new String(content);
-					txt_Reference.setEditable(true);
+					txt_Reference.setEnabled(true);
 					txt_Reference.setFocus();
 				}
 				catch (Exception ex)
 				{
-					txt_Reference.setEditable(false);
+					txt_Reference.setEnabled(false);
 			    }
 			}
 		});
@@ -240,10 +258,38 @@ public class NgramView extends ViewPart
 		btn_LoadReferenceText.setText("Load reference text...");
 
 		txt_Reference = new Text(grp_LoadReferenceText, SWT.BORDER);
-		txt_Reference.setEditable(false);
+		txt_Reference.setEnabled(false);
 		txt_Reference.setLayoutData(new GridData(SWT.FILL, SWT.LEFT, false, false, 1, 1));
 		txt_Reference.setBounds(235, 25, 145, 23);
-				
+		
+		btn_ReferenceSubmit = new Button(grp_LoadReferenceText, SWT.NONE);		
+		btn_ReferenceSubmit.addMouseListener(new MouseAdapter()
+		{
+			public void mouseDown(MouseEvent e)
+			{	
+				if (txt_Reference.getText().equals("Literature") || 
+					txt_Reference.getText().equals("Game rules") ||	
+					txt_Reference.getText().equals("Politics")   ||
+					txt_Reference.getText().equals("Football")   ||
+					txt_Reference.getText().equals("Law"))
+				{						
+					Display display = Display.getDefault();
+					Shell dialogShell = new Shell(display, SWT.APPLICATION_MODAL);
+					
+					MessageBox messageBox = new MessageBox(dialogShell, SWT.ICON_WARNING | SWT.OK);
+					messageBox.setText("Error");
+					messageBox.setMessage("Choose an alternative name for your reference text.");
+					messageBox.open();
+				}
+				else
+				{
+					txt_Reference.setEnabled(false);
+				}
+			}
+		});
+		btn_ReferenceSubmit.setBounds(460, 25, 145, 23);
+		btn_ReferenceSubmit.setText("Submit name");		
+		
 		grp_AnalizeText = new Group(cp_Container, SWT.NONE);
 		gd_grp_AnalizeText = new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1);
 		gd_grp_AnalizeText.heightHint = 45;
@@ -254,7 +300,20 @@ public class NgramView extends ViewPart
 		{
 			public void mouseDown(MouseEvent e)
 			{
-			    NgramCalculate();
+				if ((txt_Reference.getText().length() > 0) && !txt_Reference.getEnabled())
+				{
+					NgramCalculate();
+				}
+				else
+				{
+					Display display = Display.getDefault();
+					Shell dialogShell = new Shell(display, SWT.APPLICATION_MODAL);
+					
+					MessageBox messageBox = new MessageBox(dialogShell, SWT.ICON_WARNING | SWT.OK);
+					messageBox.setText("Error");
+					messageBox.setMessage("Submit reference name.");
+					messageBox.open();
+				}
 			}
 		});
 		btn_AnalizeText.setBounds(10, 22, 145, 23);
