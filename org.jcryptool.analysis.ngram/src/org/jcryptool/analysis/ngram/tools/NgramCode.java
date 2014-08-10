@@ -359,8 +359,10 @@ public class NgramCode
         }
 
         //An array of 2- and 3-gram distances between given txt and 5 other txts
-        int[] distance2gram = new int[8];        
+        int[] distance2gram = new int[8];  
+        int[] distance2gramQ = new int[8]; //distance for Least Squares
         int[] distance3gram = new int[8];
+        int[] distance3gramQ = new int[8]; //distance for Least Squares
 
         /** 2-GRAM DISTANCES BETWEEN GIVEN TXT AND 5 OTHER TXTS*/
         distance2gram[0] = 0;
@@ -380,13 +382,17 @@ public class NgramCode
                 	// if ENGLISH: language=10, if GERMAN: language=0
                     if (ngramArr[0][i].equals(ngramArr[2 * dis2 + language][j])) //compare 2,4,6,8,10
                     {
-                        distance2gram[dis2] += Math.abs(i - j); //calc Euclidean dist. |i-j|             
+                        distance2gram[dis2] += Math.abs(i - j); //calc Euclidean dist. |i-j| 
+                        distance2gramQ[dis2] += Math.pow(Math.abs(i - j), 2); //square distance 
                         w = 1;
                     } 
                 }
 
                 if (w == 0) //if for two i and j there were NO 2 equals (e.g.ER = ER)
-                    distance2gram[dis2] += 50 - i + 5;                 
+                {
+                    distance2gram[dis2] += 50 - i + 5;   
+                    distance2gramQ[dis2] +=  Math.pow((50 - i + 5), 2);
+                }
                 
                 else
                     w = 0;                
@@ -405,12 +411,17 @@ public class NgramCode
                     if (ngramArr[0][i].equals(ngramArr[22][j])) 
                     {
                         distance2gram[6] += Math.abs(i - j);
+                        distance2gramQ[6] += Math.pow(Math.abs(i - j), 2); //square distance
                         w = 1;
                     }
                 }
 
                 if (w == 0)
-                    distance2gram[6] += 50 - i + 5; 
+                {                	
+                	distance2gram[6] += 50 - i + 5;
+                	distance2gramQ[6] +=  Math.pow((50 - i + 5), 2);
+                }
+                     
                 else
                     w = 0;
             }
@@ -422,6 +433,12 @@ public class NgramCode
         System.out.println("2-gram distance to Politics: " + distance2gram[3]);
         System.out.println("2-gram distance to Football: " + distance2gram[4]);
         System.out.println("2-gram distance to Law: " + distance2gram[5]);
+        
+        System.out.println("Q 2-gram distance to Literature: " + Math.sqrt(distance2gramQ[1]));
+        System.out.println("Q 2-gram distance to Games: " + Math.sqrt(distance2gramQ[2]));
+        System.out.println("Q 2-gram distance to Politics: " + Math.sqrt(distance2gramQ[3]));
+        System.out.println("Q 2-gram distance to Football: " + Math.sqrt(distance2gramQ[4]));
+        System.out.println("Q 2-gram distance to Law: " + Math.sqrt(distance2gramQ[5]));
 
         if (!view.getReferenceTitle().equals(""))
             System.out.println("2-gram distance to "+ view.getReferenceTitle() + ": " + distance2gram[6]);
@@ -441,12 +458,16 @@ public class NgramCode
                     if (ngramArr[1][i].equals(ngramArr[2 * dis3 + 1 + language][j])) //compare 3,5,7,9,11
                     {
                         distance3gram[dis3] += Math.abs(i - j);
+                        distance3gramQ[dis3] += Math.pow(Math.abs(i - j), 2); //square distance
                         w = 1;
                     }
                 }
 
                 if (w == 0) //if for two i and j there were NO 2 equals (e.g.ER = ER)
+                {
                     distance3gram[dis3] += 50 - i + 5;
+                	distance3gramQ[dis3] +=  Math.pow((50 - i + 5), 2);
+                }
                 else
                     w = 0;
             }
@@ -462,12 +483,16 @@ public class NgramCode
                     if (ngramArr[1][i].equals(ngramArr[23][j]))
                     {
                         distance3gram[6] += Math.abs(i - j);
+                        distance3gramQ[6] += Math.pow(Math.abs(i - j), 2); //square distance
                         w = 1;
                     }
                 }
 
                 if (w == 0)
+                {
                     distance3gram[6] += 50 - i + 5;
+                    distance3gramQ[6] +=  Math.pow((50 - i + 5), 2);
+                }
                 else
                     w = 0;
             }
@@ -479,6 +504,12 @@ public class NgramCode
         System.out.println("3-gram distance to Politics: " + distance3gram[3]);
         System.out.println("3-gram distance to Football: " + distance3gram[4]);
         System.out.println("3-gram distance to Law: " + distance3gram[5]);
+        
+        System.out.println("Q 3-gram distance to Literature: " + Math.sqrt(distance3gramQ[1]));
+        System.out.println("Q 3-gram distance to Games: " + Math.sqrt(distance3gramQ[2]));
+        System.out.println("Q 3-gram distance to Politics: " + Math.sqrt(distance3gramQ[3]));
+        System.out.println("Q 3-gram distance to Football: " + Math.sqrt(distance3gramQ[4]));
+        System.out.println("Q 3-gram distance to Law: " + Math.sqrt(distance3gramQ[5]));
 
         if (!view.getReferenceTitle().equals(""))
             System.out.println("2-gram distance to " + view.getReferenceTitle() + ": " + distance3gram[6]);
@@ -488,6 +519,9 @@ public class NgramCode
         /** COMBINED DISTANCES BETWEEN GIVEN TXT AND 5 OTHER TXTS*/
         int[] distance;
         distance = new int[7];
+        
+        double[] distanceQ;
+        distanceQ = new double[7];
 
         //ADD 2-gram and 3-gram distances
         for (int m = 1; m < 6; m++)
@@ -495,15 +529,32 @@ public class NgramCode
        
         if (!view.getReferenceTitle().equals(""))
             distance[6]= distance2gram[6]+distance3gram[6]; //if there is manual reference
+        
+        //ADD 2-gram and 3-gram distances, Least Squares
+        for (int m = 1; m < 6; m++)
+        	distanceQ[m] = Math.sqrt(distance2gramQ[m]) + Math.sqrt(distance3gramQ[m]);
+        	
+        if (!view.getReferenceTitle().equals(""))
+            distanceQ[6]= Math.sqrt(distance2gramQ[6])+Math.sqrt(distance3gram[6]); //if there is manual reference
 
         System.out.println("Combined distance to Literature: " + distance[1]);
         System.out.println("Combined distance to Game rules: " + distance[2]);
         System.out.println("Combined distance to Politics: " + distance[3]);
         System.out.println("Combined distance to Football: " + distance[4]);
         System.out.println("Combined distance to Law: " + distance[5]);
-
+        
         if (!view.getReferenceTitle().equals(""))
             System.out.println("Combined distance to " + view.getReferenceTitle() + ": " + distance[6]);
+        System.out.println("-------");
+        
+        System.out.println("Q Combined distance to Literature: " + distanceQ[1]);
+        System.out.println("Q Combined distance to Game rules: " + distanceQ[2]);
+        System.out.println("Q Combined distance to Politics: " + distanceQ[3]);
+        System.out.println("Q Combined distance to Football: " + distanceQ[4]);
+        System.out.println("Q Combined distance to Law: " + distanceQ[5]);
+
+        if (!view.getReferenceTitle().equals(""))
+            System.out.println("Q Combined distance to " + view.getReferenceTitle() + ": " + distanceQ[6]);
         System.out.println("-------");
                 
 

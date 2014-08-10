@@ -1,13 +1,21 @@
 package org.jcryptool.analysis.ngram.views;
 
 import java.io.*;
+
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.custom.*;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.part.*;
 import org.eclipse.wb.swt.*;
 import org.jcryptool.analysis.ngram.tools.*;
@@ -42,6 +50,9 @@ public class NgramView extends ViewPart
     private Button btn_ReferenceSubmit;
     private Text txt_ResultText;
     private String referenceText;
+    
+    private Button btnReset;
+
 
     public NgramView()
     {
@@ -240,6 +251,7 @@ public class NgramView extends ViewPart
 					fis.close();
 					referenceText = new String(content);
 					txt_Reference.setEnabled(true);
+					txt_Reference.setText("Name_of_new_topic");
 					txt_Reference.setFocus();
 				}
 				catch (Exception ex)
@@ -276,7 +288,7 @@ public class NgramView extends ViewPart
 					messageBox.setMessage("Choose an alternative name for your reference text.");
 					messageBox.open();
 				}
-				else
+				else if (!txt_Reference.getText().equals("Name_of_new_topic"))
 				{
 					txt_Reference.setEnabled(false);
 				}
@@ -340,7 +352,45 @@ public class NgramView extends ViewPart
 
 		sc_Container.setContent(cp_Container);
 		sc_Container.setMinSize(cp_Container.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		
+//        btnReset = new Button(cp_Container, SWT.NONE);
+//        btnReset.setBounds(579, 457, 94, 26);
+//        btnReset.setText("Restart");
+//		
+//        // Adds a Listener for the reset button
+//        btnReset.addSelectionListener(new SelectionAdapter() {
+//            public void widgetSelected(SelectionEvent e) {
+//                reset();
+//            }
+//        });
 	}
+	
+	
+	
+//	public class RestartHandler extends AbstractHandler {
+//	    public Object execute(ExecutionEvent event) throws ExecutionException {
+//	        if (HandlerUtil.getActivePart(event) instanceof NgramView) {
+//	        	NgramView view = ((NgramView) HandlerUtil.getActivePart(event));
+//	                
+//	                view.reset();
+//	        }
+//	        return null;
+//	    }
+//	}
+//	
+//	public void reset() {
+//		Control[] children = cp_Container.getChildren();
+//		for (Control control : children) {
+//			control.dispose();
+//		}
+//		createPartControl(cp_Container);
+//		cp_Container.layout();
+//	}
+	
+//	private void fillLocalToolBar(IToolBarManager manager) {
+//		addContributionItem(manager, null, PlatformUI.getWorkbench().getSharedImages().
+//				getImageDescriptor(ISharedImages.IMG_TOOL_NEW_WIZARD), "Start the analysis over.");
+//	}
 
 	public void NgramCalculate()
 	{
