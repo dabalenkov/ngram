@@ -315,7 +315,7 @@ public class NgramCode
             }
         }
         
-// IF THERE IS A MANUAL REFERENCE 
+// END IF THERE IS A MANUAL REFERENCE 
         
 
         //Remove spaces and convert to Upper Case
@@ -353,9 +353,14 @@ public class NgramCode
             for (String p: resultSorted)
                 if (++count < e51)
                 {
-                    ngramArr[n - 2][count] = p;
-                    System.out.println(count+ ". "+ ngramArr[n-2][count]);
-                }    
+                	if (p != null && !p.isEmpty()) //check if the 2/3-gram not equals null
+                		{
+                			ngramArr[n - 2][count] = p;
+                			System.out.println(count+ ". "+ ngramArr[n-2][count]);
+                		} 
+                	else 
+                		count--;
+                }                         
         }
 
         //An array of 2- and 3-gram distances between given txt and 5 other txts
@@ -382,16 +387,21 @@ public class NgramCode
                 	// if ENGLISH: language=10, if GERMAN: language=0
                     if (ngramArr[0][i].equals(ngramArr[2 * dis2 + language][j])) //compare 2,4,6,8,10
                     {
-                        distance2gram[dis2] += Math.abs(i - j); //calc Euclidean dist. |i-j| 
-                        distance2gramQ[dis2] += Math.pow(Math.abs(i - j), 2); //square distance 
+                    	//0 - Euclidiean, 1 - Least Squares
+                    	if (view.getDistanceMethod() == 0)                     	
+                    		distance2gram[dis2] += Math.abs(i - j); //calc Euclidean dist. |i-j| 
+                    	else 
+                    		distance2gramQ[dis2] += Math.pow(Math.abs(i - j), 2); //square distance 
                         w = 1;
                     } 
                 }
 
                 if (w == 0) //if for two i and j there were NO 2 equals (e.g.ER = ER)
                 {
-                    distance2gram[dis2] += 50 - i + 5;   
-                    distance2gramQ[dis2] +=  Math.pow((50 - i + 5), 2);
+                	if (view.getDistanceMethod() == 0)
+                		distance2gram[dis2] += 50 - i + 5;   
+                	else
+                		distance2gramQ[dis2] +=  Math.pow((50 - i + 5), 2);
                 }
                 
                 else
@@ -410,16 +420,20 @@ public class NgramCode
                 {
                     if (ngramArr[0][i].equals(ngramArr[22][j])) 
                     {
-                        distance2gram[6] += Math.abs(i - j);
-                        distance2gramQ[6] += Math.pow(Math.abs(i - j), 2); //square distance
+                    	if (view.getDistanceMethod() == 0)
+                    		distance2gram[6] += Math.abs(i - j);
+                    	else
+                    		distance2gramQ[6] += Math.pow(Math.abs(i - j), 2); //square distance
                         w = 1;
                     }
                 }
 
                 if (w == 0)
-                {                	
-                	distance2gram[6] += 50 - i + 5;
-                	distance2gramQ[6] +=  Math.pow((50 - i + 5), 2);
+                {   
+                	if (view.getDistanceMethod() == 0)
+                		distance2gram[6] += 50 - i + 5;
+                	else
+                		distance2gramQ[6] +=  Math.pow((50 - i + 5), 2);
                 }
                      
                 else
@@ -449,24 +463,28 @@ public class NgramCode
         distance3gram[0] = 0;
         w = 0; //flag
 
-        for (int dis3 = 1; dis3 < 6; dis3++)
+        for (int dis3 = 1; dis3 < 6; dis3++) 
         { 
-            for (int i = 1; i < 51; i++)
+            for (int i = 1; i < 51; i++) 
             {
                 for (int j = 1; j < 51; j++)
-                {
-                    if (ngramArr[1][i].equals(ngramArr[2 * dis3 + 1 + language][j])) //compare 3,5,7,9,11
-                    {
-                        distance3gram[dis3] += Math.abs(i - j);
-                        distance3gramQ[dis3] += Math.pow(Math.abs(i - j), 2); //square distance
+                {                    	
+                    if (ngramArr[1][i].equals(ngramArr[2 * dis3 + 1 + language][j])) //compare 3,5,7,9,11 
+                    {   
+                    	if (view.getDistanceMethod() == 0)
+                    		distance3gram[dis3] += Math.abs(i - j);
+                    	else
+                    		distance3gramQ[dis3] += Math.pow(Math.abs(i - j), 2); //square distance
                         w = 1;
-                    }
+                    }                    
                 }
 
                 if (w == 0) //if for two i and j there were NO 2 equals (e.g.ER = ER)
                 {
-                    distance3gram[dis3] += 50 - i + 5;
-                	distance3gramQ[dis3] +=  Math.pow((50 - i + 5), 2);
+                	if (view.getDistanceMethod() == 0)
+                		distance3gram[dis3] += 50 - i + 5;
+                	else
+                		distance3gramQ[dis3] +=  Math.pow((50 - i + 5), 2);
                 }
                 else
                     w = 0;
@@ -482,16 +500,20 @@ public class NgramCode
                 {
                     if (ngramArr[1][i].equals(ngramArr[23][j]))
                     {
-                        distance3gram[6] += Math.abs(i - j);
-                        distance3gramQ[6] += Math.pow(Math.abs(i - j), 2); //square distance
+                    	if (view.getDistanceMethod() == 0)
+                    		distance3gram[6] += Math.abs(i - j);
+                    	else
+                    		distance3gramQ[6] += Math.pow(Math.abs(i - j), 2); //square distance
                         w = 1;
                     }
                 }
 
                 if (w == 0)
                 {
-                    distance3gram[6] += 50 - i + 5;
-                    distance3gramQ[6] +=  Math.pow((50 - i + 5), 2);
+                	if (view.getDistanceMethod() == 0)
+                		distance3gram[6] += 50 - i + 5;
+                	else
+                		distance3gramQ[6] +=  Math.pow((50 - i + 5), 2);
                 }
                 else
                     w = 0;
@@ -524,43 +546,48 @@ public class NgramCode
         distanceQ = new double[7];
 
         //ADD 2-gram and 3-gram distances
-        for (int m = 1; m < 6; m++)
-            distance[m] = distance2gram[m] + distance3gram[m];
+        //0 - Euclidean
+        if (view.getDistanceMethod() == 0)
+        {	
+        	for (int m = 1; m < 6; m++)
+        		distance[m] = distance2gram[m] + distance3gram[m];
        
-        if (!view.getReferenceTitle().equals(""))
-            distance[6]= distance2gram[6]+distance3gram[6]; //if there is manual reference
-        
-        //ADD 2-gram and 3-gram distances, Least Squares
-        for (int m = 1; m < 6; m++)
-        	distanceQ[m] = Math.sqrt(distance2gramQ[m]) + Math.sqrt(distance3gramQ[m]);
+        	if (!view.getReferenceTitle().equals(""))
+        		distance[6]= distance2gram[6]+distance3gram[6]; //if there is manual reference
         	
-        if (!view.getReferenceTitle().equals(""))
-            distanceQ[6]= Math.sqrt(distance2gramQ[6])+Math.sqrt(distance3gram[6]); //if there is manual reference
-
-        System.out.println("Combined distance to Literature: " + distance[1]);
-        System.out.println("Combined distance to Game rules: " + distance[2]);
-        System.out.println("Combined distance to Politics: " + distance[3]);
-        System.out.println("Combined distance to Football: " + distance[4]);
-        System.out.println("Combined distance to Law: " + distance[5]);
+            System.out.println("Combined distance to Literature: " + distance[1]);
+            System.out.println("Combined distance to Game rules: " + distance[2]);
+            System.out.println("Combined distance to Politics: " + distance[3]);
+            System.out.println("Combined distance to Football: " + distance[4]);
+            System.out.println("Combined distance to Law: " + distance[5]);
+            
+            if (!view.getReferenceTitle().equals(""))
+                System.out.println("Combined distance to " + view.getReferenceTitle() + ": " + distance[6]);
+            System.out.println("-------");
+        }
+        //ADD 2-gram and 3-gram distances, Least Squares
+        else
+        {	        
+        	for (int m = 1; m < 6; m++)
+        		distanceQ[m] = Math.sqrt(distance2gramQ[m]) + Math.sqrt(distance3gramQ[m]);
+        	
+        	if (!view.getReferenceTitle().equals(""))
+        		distanceQ[6]= Math.sqrt(distance2gramQ[6])+Math.sqrt(distance3gram[6]); //if there is manual reference
         
-        if (!view.getReferenceTitle().equals(""))
-            System.out.println("Combined distance to " + view.getReferenceTitle() + ": " + distance[6]);
-        System.out.println("-------");
-        
-        System.out.println("Q Combined distance to Literature: " + distanceQ[1]);
-        System.out.println("Q Combined distance to Game rules: " + distanceQ[2]);
-        System.out.println("Q Combined distance to Politics: " + distanceQ[3]);
-        System.out.println("Q Combined distance to Football: " + distanceQ[4]);
-        System.out.println("Q Combined distance to Law: " + distanceQ[5]);
+        	System.out.println("Q Combined distance to Literature: " + distanceQ[1]);
+        	System.out.println("Q Combined distance to Game rules: " + distanceQ[2]);
+        	System.out.println("Q Combined distance to Politics: " + distanceQ[3]);
+        	System.out.println("Q Combined distance to Football: " + distanceQ[4]);
+        	System.out.println("Q Combined distance to Law: " + distanceQ[5]);
 
-        if (!view.getReferenceTitle().equals(""))
-            System.out.println("Q Combined distance to " + view.getReferenceTitle() + ": " + distanceQ[6]);
-        System.out.println("-------");
+        	if (!view.getReferenceTitle().equals(""))
+        		System.out.println("Q Combined distance to " + view.getReferenceTitle() + ": " + distanceQ[6]);
+        	System.out.println("-------");
+        }	
                 
 
         /**SORT DISTANCES IN DESCENDING ORDER AND MAKE A GUESS*/
-        int totalNr = !view.getReferenceTitle().equals("")? 7: 6;
-        int[] newDistance = new int[totalNr];
+        int totalNr = !view.getReferenceTitle().equals("")? 7: 6;        
         
         //TESTING
         String[] namesStr = new String[totalNr];
@@ -572,95 +599,90 @@ public class NgramCode
         if (!view.getReferenceTitle().equals(""))
         	namesStr[6] = view.getReferenceTitle();
         
+        if (view.getDistanceMethod() == 0)
+    	{	
         MyLinkedMap<String, Integer> nameDist = new MyLinkedMap<String, Integer>();
+        
+    	
+    		for (int v=1; v<totalNr; v++)
+            	nameDist.put(namesStr[v], distance[v]);	
 
-        for (int v=1; v<totalNr; v++){
-            	nameDist.put(namesStr[v], distance[v]);
-            //	System.out.println("!Combined distance to "+namesStr[v]+ ": " + distance[v]);
-        }        
-
-        List<String> sortedNameDist = new ArrayList<String>();
-        sortedNameDist = getWordInDescendingFreqOrder(nameDist);
+    		List<String> sortedNameDist = new ArrayList<String>();
+    		sortedNameDist = getWordInDescendingFreqOrder(nameDist);
       
-        MyLinkedMap<String, Integer> nameDistSorted = new MyLinkedMap<String, Integer>();        
-        
-        for (String word : sortedNameDist){        	
-        	nameDistSorted.put(word, nameDist.get(word));
-        	System.out.println(word + ": " + (int) nameDist.get(word));
-        }
-        
-        String star1 = "\u2605 \u2606 \u2606 \u2606 \u2606";
-        String star2 = "\u2605 \u2606 \u2606 \u2606 \u2606";
-        
-        if (nameDistSorted.getValue(totalNr-2) < 1050)
-        	star1 = "\u2605 \u2605 \u2605 \u2605 \u2605";
-        else if (nameDistSorted.getValue(totalNr-2) < 1150)
-        	star1 = "\u2605 \u2605 \u2605 \u2605 \u2606";
-        else if (nameDistSorted.getValue(totalNr-2) < 1250)
-        	star1 = "\u2605 \u2605 \u2605 \u2606 \u2606";
-        else if (nameDistSorted.getValue(totalNr-2) < 1350)
-        	star1 = "\u2605 \u2605 \u2606 \u2606 \u2606";
-        
-        if (nameDistSorted.getValue(totalNr-3) < 1050)
-        	star2 = "\u2605 \u2605 \u2605 \u2605 \u2605";
-        else if (nameDistSorted.getValue(totalNr-3) < 1150)
-        	star2 = "\u2605 \u2605 \u2605 \u2605 \u2606";
-        else if (nameDistSorted.getValue(totalNr-3) < 1250)
-        	star2 = "\u2605 \u2605 \u2605 \u2606 \u2606";
-        else if (nameDistSorted.getValue(totalNr-3) < 1350)
-        	star2 = "\u2605 \u2605 \u2606 \u2606 \u2606";
-        
-        //TESTING
-        
-        
+    		MyLinkedMap<String, Integer> nameDistSorted = new MyLinkedMap<String, Integer>();
+    		
+    		int guess = 0;
+            String star = "\u2605 \u2606 \u2606 \u2606 \u2606";
+            String ResultStr = "";
+            
+            for (String word : sortedNameDist){
+            	guess++;
+            	nameDistSorted.put(word, nameDist.get(word));
+            	
+                if ((int) nameDist.get(word) < 1050)
+                	star = "\u2605 \u2605 \u2605 \u2605 \u2605";
+                else if ((int) nameDist.get(word) < 1150)
+                	star = "\u2605 \u2605 \u2605 \u2605 \u2606";
+                else if ((int) nameDist.get(word) < 1250)
+                	star = "\u2605 \u2605 \u2605 \u2606 \u2606";
+                else if ((int) nameDist.get(word) < 1350)
+                	star = "\u2605 \u2605 \u2606 \u2606 \u2606";
+            	        	        	    
+            	ResultStr = "("+star+") \t"+(totalNr - guess)+". Guess: This text deals with the topic "+ word 
+                        + "  ["+ (int) nameDist.get(word)+"]" + (guess == 1? "": "\n") + ResultStr;
+            	
+                //PRINT RESULT
+                
+                System.out.println(ResultStr);
+                view.setResultText(ResultStr);
+            }    
+    	}
+    	
+    	else
+    	{	
+    		MyLinkedMap<String, Integer> nameDist = new MyLinkedMap<String, Integer>();
+    		
+    		for (int v=1; v<totalNr; v++)
+            	nameDist.put(namesStr[v], (int)distanceQ[v]);	
 
-        //COPY
-        for (int f = 1; f < totalNr; f++)
-            newDistance[f] = distance[f];
-        //SORT
-        Arrays.sort(newDistance);
-
-        //MAKE A GUESS
-        System.out.println("-------");
-        
-        //1. GUESS
-        if (newDistance[1] == distance[1])
-            result1 = "1 Guess: This text deals with the topic Literature."; 
-        else if (newDistance[1] == distance[2])
-            result1 = "1 Guess: This text deals with the topic Game rules.";
-        else if (newDistance[1] == distance[3])
-            result1 = "1 Guess: This text deals with the topic Politics.";
-        else if (newDistance[1] == distance[4])
-            result1 = "1 Guess: This text deals with the topic Football.";
-        else if (newDistance[1] == distance[5])
-            result1 = "1 Guess: This text deals with the topic Law.";
-        else if (!view.getReferenceTitle().equals(""))
-            if (newDistance[1] == distance[6])
-                result1 = "1 Guess: This text deals with the topic " + view.getReferenceTitle() + ".";
-        
-        //2. GUESS
-        
-        //Make sure that the two guesses are NOT the same, thus compare in reversed order
-        if (newDistance[2] == distance[5])
-            result2 = "2 Guess: This text deals with the topic Law.";
-        else if (newDistance[2] == distance[4])
-            result2 = "2 Guess: This text deals with the topic Football.";
-        else if (newDistance[2] == distance[3])
-            result2 = "2 Guess: This text deals with the topic Politics.";
-        else if (newDistance[2] == distance[2])
-            result2 = "2 Guess: This text deals with the topic Game rules.";
-        else if (newDistance[2] == distance[1]) 
-           result2 = "2 Guess: This text deals with the topic Literature.";
-        else if (!view.getReferenceTitle().equals(""))
-            if (newDistance[2] == distance[6])
-                result2 = "2 Guess: This text deals with the topic " + view.getReferenceTitle() + ".";        
-        
-        //System.out.println(result1+"\t(" +star1+")"+ "\n" + result2+"\t(" +star2+")");
-        System.out.println("("+star1+") \t"+result1+"\n"+"("+star2+") \t"+ result2);
-        view.setResultText("("+star1+") \t"+result1+"\n"+"("+star2+") \t"+ result2);
-        //view.setResultText(result1+"\t(" +star1+")"+ "\n" + result2+"\t(" +star2+")");
+    		List<String> sortedNameDist = new ArrayList<String>();
+    		sortedNameDist = getWordInDescendingFreqOrder(nameDist);
+      
+    		MyLinkedMap<String, Integer> nameDistSorted = new MyLinkedMap<String, Integer>();
+    		
+    		int guess = 0;
+            String star = "\u2605 \u2606 \u2606 \u2606 \u2606";
+            String ResultStr = "";
+            
+            for (String word : sortedNameDist){
+            	guess++;
+            	nameDistSorted.put(word, nameDist.get(word));
+            	
+            	//factor 5 difference
+                if (((int) nameDist.get(word)) < 200)
+                	star = "\u2605 \u2605 \u2605 \u2605 \u2605";
+                else if ((int) nameDist.get(word) < 220)
+                	star = "\u2605 \u2605 \u2605 \u2605 \u2606";
+                else if ((int) nameDist.get(word) < 240)
+                	star = "\u2605 \u2605 \u2605 \u2606 \u2606";
+                else if ((int) nameDist.get(word) < 260)
+                	star = "\u2605 \u2605 \u2606 \u2606 \u2606";
+            	        	        	    
+            	ResultStr = "("+star+") \t"+(totalNr - guess)+". Guess: This text deals with the topic "+ word 
+                        + "  ["+ (int) nameDist.get(word)+"]" + (guess == 1? "": "\n") + ResultStr;
+            	
+                //PRINT RESULT
+                
+                System.out.println(ResultStr);
+                view.setResultText(ResultStr);
+            }    
+    	}	
     }
  
+    
+    
+    
     //Functionality to access single elements of a Map
     class MyLinkedMap<K, V> extends LinkedHashMap<K, V>
     {

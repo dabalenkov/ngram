@@ -3,6 +3,15 @@
 <plugin>
 
    <extension
+         point="org.jcryptool.core.operations.analysis">
+      <analysis
+            contextHelpId="org.jcryptool.analysis.ngram.view"
+            name="N-Gram Text-Topic Analysis"
+            viewId="org.jcryptool.analysis.ngram.views.NgramView">
+      </analysis>
+   </extension>
+
+   <extension
          point="org.eclipse.ui.views">
       <view
             name="N-Gram Text-Topic Analysis"
@@ -19,5 +28,51 @@
             viewId="org.jcryptool.analysis.ngram.views.NgramView">
       </analysis>
    </extension>
-
+   <extension
+         point="org.eclipse.help.toc">
+      <toc
+            file="$nl$/help/toc.xml"
+            primary="false">
+      </toc>
+   </extension>
+   <extension
+         point="org.eclipse.help.contexts">
+      <contexts
+            file="$nl$/help/contexts.xml">
+      </contexts>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.jcryptool.analysis.ngram.handlers.RestartHandler"
+            commandId="org.jcryptool.analysis.ngram.restartCommand">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="org.jcryptool.analysis.ngram.restartCommand"
+            name="Restart">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.jcryptool.analysis.ngram.views.NgramView">
+         <command
+               commandId="org.jcryptool.analysis.ngram.restartCommand"
+               icon="platform:/plugin/org.eclipse.ui/icons/full/etool16/new_wiz.gif"
+               style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="toolbar:org.jcryptool.analysis.ngram.views.NgramView">
+         <command
+               commandId="org.jcryptool.analysis.ngram.restartCommand"
+               icon="platform:/plugin/org.eclipse.ui/icons/full/etool16/new_wiz.gif"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
 </plugin>
